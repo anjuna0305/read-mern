@@ -1,6 +1,6 @@
 const HomePage = () => {
     return (
-        <div>"this is homepage"</div>
+        <div>"Content changed"</div>
     )
 }
 
