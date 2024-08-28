@@ -12,7 +12,8 @@ const POSearchBar: React.FC<{ onSearch: (poId: string) => void }> = ({ onSearch 
 
   return (
     <Grid container justifyContent="center">
-      <Grid item xs={10} >
+      <Grid item xs={10} style={{
+        marginTop: '10px',}} >
         <TextField
           fullWidth
           label="Search PO by ID"

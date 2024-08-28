@@ -14,7 +14,7 @@ const Right: React.FC = ({ children }) => {
         top: 0,
         right: 0,
         overflowY: 'hidden', 
-        marginTop: '64px',
+        marginTop: '60px',
         marginRight: 5,
         marginLeft: 5,
       }}

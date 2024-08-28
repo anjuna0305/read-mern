@@ -6,6 +6,7 @@ import Right from "../Containers/Right";
 import POSearchBar from "../Components/POSearchBar";
 import { Container } from '@mui/material';
 import PurchaseOrderCard from '../Components/PurchaseOrderCard';
+import PurchaseOrderReview from "../Components/PurchaseOrderReview";
 
 
 const dummyPOs = [
@@ -81,6 +82,23 @@ const dummyPOs = [
     }
   ]
   
+  const dummyPOPreview = {
+    orderId: "PO12345",
+    orderDate: "2024-08-27",
+    customerName: "John Doe",
+    customerMobile: "555-1234",
+    items: [
+      { itemId: "001", description: "Item 1", quantity: 2,unitPrice:250, taxRate: 0.18, discountRate: 0.05, totalPrice: 190.00 },
+      { itemId: "002", description: "Item 2", quantity: 1,unitPrice:250, taxRate: 0.18, discountRate: 0.05, totalPrice: 95.00 },
+      { itemId: "003", description: "Item 3", quantity: 1,unitPrice:250, taxRate: 0.18, discountRate: 0.05, totalPrice: 0.00 },
+      { itemId: "004", description: "Item 4", quantity: 1,unitPrice:250, taxRate: 0.18, discountRate: 0.05, totalPrice: 0.00 },
+    ],
+    totalValue: 285.00,
+    status: "draft"
+  };
+  
+  
+
 
 
 
@@ -92,6 +110,18 @@ const Orders = () => {
       </Left>
       <Middle>
         <CreatePO />
+        <PurchaseOrderReview style={{marginTop: '200px'}}
+          orderId={dummyPOPreview.orderId}
+          orderDate={dummyPOPreview.orderDate}
+          customerName={dummyPOPreview.customerName}
+          customerMobile={dummyPOPreview.customerMobile}
+          items={dummyPOPreview.items}
+          totalValue={dummyPOPreview.totalValue}
+          status={dummyPOPreview.status}
+          onModify={() => console.log('Modify clicked')}
+          onSubmit={() => console.log('Submit clicked')}
+          onDelete={() => console.log('Delete clicked')}
+        />
       </Middle>
       <Right>
         <POSearchBar/>
