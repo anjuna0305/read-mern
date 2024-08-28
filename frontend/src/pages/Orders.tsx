@@ -1,12 +1,12 @@
-import React from "react";
-import CreatePO from "../Components/CreatePO";
-import Middle from "../Containers/Middle";
-import Left from "../Containers/Left";
-import Right from "../Containers/Right";
-import POSearchBar from "../Components/POSearchBar";
 import { Container } from '@mui/material';
+import React, { useState } from "react";
+import CreatePO from "../Components/CreatePO";
+import POSearchBar from "../Components/POSearchBar";
 import PurchaseOrderCard from '../Components/PurchaseOrderCard';
 import PurchaseOrderReview from "../Components/PurchaseOrderReview";
+import Left from "../Containers/Left";
+import Middle from "../Containers/Middle";
+import Right from "../Containers/Right";
 
 
 const dummyPOs = [
@@ -22,7 +22,7 @@ const dummyPOs = [
       "orderDate": "2024-08-21",
       "customerName": "Jane Smith",
       "totalValue": 3400,
-      "status": "active"
+      "status": "draft"
     },
     {
       "orderId": "PO12347",
@@ -81,6 +81,7 @@ const dummyPOs = [
       "status": "active"
     }
   ]
+
   
   const dummyPOPreview = {
     orderId: "PO12345",
@@ -102,26 +103,45 @@ const dummyPOs = [
 
 
 
-const Orders = () => {
+const Orders:React.FC = () => {
+
+  const [selectedPO, setSelectedPO] = useState<string | null>(null); 
+  const [poData, setPoData] = useState<any | null>(null); 
+
+  const handlePOCardClick = (orderId: string) => {
+    console.log('PO card clicked', orderId);
+    const fetchedPO = dummyPOs.find(po => po.orderId === orderId);
+    if (fetchedPO) {
+      setPoData(dummyPOPreview);
+      setSelectedPO(orderId);
+    }
+  };
   return (
     <div>
       <Left>
         <h1>Ordersasfdwaesfeawsfwefweafawef</h1>
       </Left>
       <Middle>
-        <CreatePO />
-        <PurchaseOrderReview style={{marginTop: '200px'}}
-          orderId={dummyPOPreview.orderId}
-          orderDate={dummyPOPreview.orderDate}
-          customerName={dummyPOPreview.customerName}
-          customerMobile={dummyPOPreview.customerMobile}
-          items={dummyPOPreview.items}
-          totalValue={dummyPOPreview.totalValue}
-          status={dummyPOPreview.status}
-          onModify={() => console.log('Modify clicked')}
-          onSubmit={() => console.log('Submit clicked')}
-          onDelete={() => console.log('Delete clicked')}
-        />
+        {!selectedPO ? (
+          <CreatePO  />
+        ) : (
+          <PurchaseOrderReview
+            style={{ marginTop: '200px' }}
+            orderId={poData.orderId}
+            orderDate={poData.orderDate}
+            customerName={poData.customerName}
+            customerMobile={poData.customerMobile}
+            items={poData.items}
+            totalValue={poData.totalValue}
+            status={poData.status}
+            onModify={() => console.log('Modify clicked')}
+            onSubmit={() => console.log('Submit clicked')}
+            onDelete={() => {
+              console.log('Delete clicked');
+              setSelectedPO(null); 
+            }}
+          />
+        )}
       </Middle>
       <Right>
         <POSearchBar/>
@@ -129,16 +149,17 @@ const Orders = () => {
           overflow: 'auto',
           maxHeight: 'calc(100vh - 150px)',
         }}>
-          {dummyPOs.map((po) => (
-            <PurchaseOrderCard
-              key={po.orderId}
-              orderId={po.orderId}
-              orderDate={po.orderDate}
-              customerName={po.customerName}
-              totalValue={po.totalValue}
-              status={po.status}
-            />
-          ))}
+            {dummyPOs.map((po) => (
+              <PurchaseOrderCard
+                key={po.orderId}
+                orderId={po.orderId}
+                orderDate={po.orderDate}
+                customerName={po.customerName}
+                totalValue={po.totalValue}
+                status={po.status}
+                onClick={() => handlePOCardClick(po.orderId)} 
+              />
+            ))}
         </Container>
 
       </Right>

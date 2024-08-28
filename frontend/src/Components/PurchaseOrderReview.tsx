@@ -62,7 +62,7 @@ const handleConfirmDelete = () => {
 
 console.log("PurchaseOrderProps", items ,orderId, orderDate, customerName, customerMobile, totalValue, status, onModify, onSubmit, onDelete); // Remove this line
   return (
-    <Box sx={{ padding: 3, backgroundColor: '#f0f4f7', borderRadius: 4, boxShadow: 3 }}>
+    <Box sx={{ padding: 3, backgroundColor: '#f0f4f7',maxWidth: 870, borderRadius: 4, boxShadow: 3 }}>
       <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
         Purchase Order Review
       </Typography>
