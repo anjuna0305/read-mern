@@ -7,9 +7,10 @@ interface PurchaseOrder {
   customerName: string;
   totalValue: number;
   status: 'active' | 'draft' | 'completed';
+  onClick?: () => void;
 }
 
-const PurchaseOrderCard: React.FC<PurchaseOrder> = ({ orderId, orderDate, customerName, totalValue, status }) => {
+const PurchaseOrderCard: React.FC<PurchaseOrder> = ({ orderId, orderDate, customerName, totalValue, status,onClick }) => {
   const getBackgroundColor = () => {
     switch (status) {
       case 'active':
@@ -26,11 +27,11 @@ const PurchaseOrderCard: React.FC<PurchaseOrder> = ({ orderId, orderDate, custom
   const getTextColor = () => {
     switch (status) {
       case 'active':
-        return '#FFFFFF'; // white
+        return '#000000'; // white
       case 'completed':
         return '#000000'; // black
       case 'draft':
-        return '#FFFFFF'; // white
+        return '#000000'; // white
       default:
         return '#000';
     }
@@ -47,6 +48,7 @@ const PurchaseOrderCard: React.FC<PurchaseOrder> = ({ orderId, orderDate, custom
         fontSize: '0.8rem', 
         borderRadius: '8px',
       }}
+      onClick={onClick}
     >
       <Typography variant="body2"><strong>Order ID:</strong> {orderId}</Typography>
       <Typography variant="body2"><strong>Order Date:</strong> {orderDate}</Typography>
