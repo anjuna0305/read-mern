@@ -47,6 +47,20 @@ const PurchaseOrderReview: React.FC<PurchaseOrderProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
 
+  const getTotalPrice = (quantity: number, unitPrice: number, taxRate: number, discountRate: number) => {
+    const price = quantity * unitPrice;
+    const tax = price * taxRate;
+    const discount = price * discountRate;
+    totalValue = price + tax - discount +totalValue;
+    return price + tax - discount;
+  }
+
+  const calculateTotalPrice = () => {
+    return items
+      .reduce((acc, item) => acc + item.totalPrice, 0)
+      .toFixed(2);
+  };
+
 const handleDeleteClick = () => {
     setOpen(true);
 };
@@ -83,7 +97,7 @@ console.log("PurchaseOrderProps", items ,orderId, orderDate, customerName, custo
                   <TableCell sx={{ fontSize: '0.9rem' }}>Rs.{item.unitPrice }</TableCell>
                   <TableCell sx={{ fontSize: '0.9rem' }}>{(item.taxRate * 100).toFixed(2)}%</TableCell>
                   <TableCell sx={{ fontSize: '0.9rem' }}>{(item.discountRate * 100).toFixed(2)}%</TableCell>
-                  <TableCell sx={{ fontSize: '0.9rem' }}>Rs.{item.totalPrice.toFixed(2)}</TableCell>
+                  <TableCell sx={{ fontSize: '0.9rem' }}>Rs.{getTotalPrice(item.quantity,item.unitPrice,item.taxRate,item.discountRate)}</TableCell>
                 </OddTableRow>
               ) : (
                 <EvenTableRow key={item.itemId}>
@@ -93,7 +107,7 @@ console.log("PurchaseOrderProps", items ,orderId, orderDate, customerName, custo
                     <TableCell sx={{ fontSize: '0.9rem' }}>Rs.{item.unitPrice }</TableCell>
                   <TableCell sx={{ fontSize: '0.9rem' }}>{(item.taxRate * 100).toFixed(2)}%</TableCell>
                   <TableCell sx={{ fontSize: '0.9rem' }}>{(item.discountRate * 100).toFixed(2)}%</TableCell>
-                  <TableCell sx={{ fontSize: '0.9rem' }}>Rs.{item.totalPrice.toFixed(2)}</TableCell>
+                  <TableCell sx={{ fontSize: '0.9rem' }}>Rs.{getTotalPrice(item.quantity,item.unitPrice,item.taxRate,item.discountRate)}</TableCell>
                 </EvenTableRow>
               )
             ))}

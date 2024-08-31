@@ -90,9 +90,9 @@ const dummyPOs = [
     customerMobile: "555-1234",
     items: [
       { itemId: "001", description: "Item 1", quantity: 2,unitPrice:250, taxRate: 0.18, discountRate: 0.05, totalPrice: 190.00 },
-      { itemId: "002", description: "Item 2", quantity: 1,unitPrice:250, taxRate: 0.18, discountRate: 0.05, totalPrice: 95.00 },
-      { itemId: "003", description: "Item 3", quantity: 1,unitPrice:250, taxRate: 0.18, discountRate: 0.05, totalPrice: 0.00 },
-      { itemId: "004", description: "Item 4", quantity: 1,unitPrice:250, taxRate: 0.18, discountRate: 0.05, totalPrice: 0.00 },
+      { itemId: "002", description: "Item 2", quantity: 1,unitPrice:280, taxRate: 0.18, discountRate: 0.05, totalPrice: 95.00 },
+      { itemId: "003", description: "Item 3", quantity: 1,unitPrice:320, taxRate: 0.18, discountRate: 0.05, totalPrice: 0.00 },
+      { itemId: "004", description: "Item 4", quantity: 1,unitPrice:810, taxRate: 0.18, discountRate: 0.05, totalPrice: 0.00 },
     ],
     totalValue: 285.00,
     status: "draft"
