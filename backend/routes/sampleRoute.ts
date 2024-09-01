@@ -1,9 +1,14 @@
-import { Router, Request, Response } from 'express';
+import express from "express";
+import { getFeedPosts, getUserPosts, likePost } from "../controllers/sampleController";
+// import { verifyToken } from "../middleware/auth.js";
 
-const router = Router();
+const router = express.Router();
 
-router.get('/', (req: Request, res: Response) => {
-  res.send('This is a sample route.');
-});
+/* READ */
+router.get("/", getFeedPosts);
+router.get("/:userId/posts", getUserPosts);
+
+/* UPDATE */
+router.patch("/:id/like", likePost);
 
 export default router;
