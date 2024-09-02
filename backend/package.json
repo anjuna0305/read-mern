@@ -16,12 +16,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-<<<<<<< HEAD
     "helmet": "^7.1.0",
     "mongoose": "^8.6.0"
-=======
-    "mongodb": "^6.8.0" //E8v4rt4jnxVFVkCl
->>>>>>> 48a6e09 (commit befor pull)
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
