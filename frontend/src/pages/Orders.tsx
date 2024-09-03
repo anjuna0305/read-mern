@@ -144,7 +144,7 @@ const Orders:React.FC = () => {
         )}
       </Middle>
       <Right>
-        <POSearchBar/>
+        <POSearchBar onSearch={(poId: string) => console.log(poId)} />
         <Container sx={{
           overflow: 'auto',
           maxHeight: 'calc(100vh - 150px)',

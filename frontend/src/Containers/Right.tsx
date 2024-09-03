@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 
 
 
-const Right: React.FC = ({ children }) => {
+const Right: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Box
       sx={{

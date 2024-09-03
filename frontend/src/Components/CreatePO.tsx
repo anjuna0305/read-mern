@@ -12,6 +12,7 @@ import {
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
+import axios from "axios";
 
 interface Item {
   id: number;
@@ -184,9 +185,24 @@ const CreatePO: React.FC = () => {
       .toFixed(2);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     formik.setFieldValue('status', 'submitted');
     formik.submitForm();
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/purchase-orders', {
+        poNumber: formik.values.poNumber,
+        date: formik.values.date,
+        buyer: formik.values.buyer,
+        buyerConNum: formik.values.buyerConNum,
+        status: formik.values.status,
+        items,
+      });
+      console.log(response.data);
+    }
+    catch (error) {
+      console.error(error);
+    }
   };
 
   const handleCancel = () => {

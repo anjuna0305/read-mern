@@ -2,7 +2,9 @@ import React from 'react';
 import { Stack } from '@mui/material';
 import Box from '@mui/material/Box';
 
-const Middle: React.FC = ({ children }) => {
+import { ReactNode } from 'react';
+
+const Middle: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <Box
       sx={{
