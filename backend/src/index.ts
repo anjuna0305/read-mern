@@ -23,14 +23,19 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 app.use("/auth", authRoutes);
 
 /* MONGOOSE SETUP */
+
+const username = process.env.DB_USERNAME || "admin";
+const passwd = process.env.DB_PASSWORD || "1234567890";
+
+
 const PORT = process.env.PORT || 5000;
-const mongo_url = process.env.MONGO_URL ? process.env.MONGO_URL : ""
+const CONNECTION_url = `mongodb+srv://${username}:${passwd}@cluster0.tfcjplj.mongodb.net/?retryWrites=true&w=majority`;
+
 mongoose
-  .connect(mongo_url)
-  .then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-    /* ADD DATA ONE TIME */
-    // User.insertMany(users);
-    // Post.insertMany(posts);
-  })
-  .catch((error) => console.log(`${error} did not connect`));
+    .connect(CONNECTION_url)
+    .then(() => console.log("connection is established and running"))
+    .catch((err) => console.log(err.message));
+
+app.listen(process.env.PORT || 3001, () =>
+    console.log("server started on port 5173")
+);
