@@ -6,6 +6,8 @@ const port = process.env.PORT || 5000;
 
 const cors = require('cors');
 
+mongodb+srv: mjpavithra6520:<db_password>@read-mern-mj.2g1sr.mongodb.net/?retryWrites=true&w=majority&appName=Read-MERN-MJ
+
 // Middleware
 app.use(express.json());
 app.use(cors());
