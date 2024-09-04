@@ -10,7 +10,6 @@ import {
   IconButton,
 } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
 
@@ -81,9 +80,9 @@ const CreatePO: React.FC = () => {
       status: 'draft',
     },
     validationSchema,
-    // onSubmit: (values) => {
-    //   console.log('Purchase Order Data:', { ...values, items });
-    // },
+    onSubmit: (values) => {
+      console.log('Purchase Order Data:', { ...values, items });
+    },
   });
 
   const handleAddItem = () => {
@@ -145,39 +144,39 @@ const CreatePO: React.FC = () => {
     );
   };
 
-  const handleIncreaseQuantity = (id: number) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-              totalPrice:
-                item.unitPrice *
-                (item.quantity + 1) *
-                (1 + item.taxRate - item.discountRate),
-            }
-          : item
-      )
-    );
-  };
+  // const handleIncreaseQuantity = (id: number) => {
+  //   setItems((prevItems) =>
+  //     prevItems.map((item) =>
+  //       item.id === id
+  //         ? {
+  //             ...item,
+  //             quantity: item.quantity + 1,
+  //             totalPrice:
+  //               item.unitPrice *
+  //               (item.quantity + 1) *
+  //               (1 + item.taxRate - item.discountRate),
+  //           }
+  //         : item
+  //     )
+  //   );
+  // };
 
-  const handleDecreaseQuantity = (id: number) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id && item.quantity > 1
-          ? {
-              ...item,
-              quantity: item.quantity - 1,
-              totalPrice:
-                item.unitPrice *
-                (item.quantity - 1) *
-                (1 + item.taxRate - item.discountRate),
-            }
-          : item
-      )
-    );
-  };
+  // const handleDecreaseQuantity = (id: number) => {
+  //   setItems((prevItems) =>
+  //     prevItems.map((item) =>
+  //       item.id === id && item.quantity > 1
+  //         ? {
+  //             ...item,
+  //             quantity: item.quantity - 1,
+  //             totalPrice:
+  //               item.unitPrice *
+  //               (item.quantity - 1) *
+  //               (1 + item.taxRate - item.discountRate),
+  //           }
+  //         : item
+  //     )
+  //   );
+  // };
 
   const calculateTotalPrice = () => {
     return items
@@ -370,12 +369,11 @@ const CreatePO: React.FC = () => {
               </IconButton>
             </Grid>
             <Grid container justifyContent="flex-end" style={{ marginTop: 10 }}>
-              <Typography variant="h6"  style={{ marginRight: 30 }}>Total Price:  </Typography> 
-              <Typography xs={2} variant="h6"style={{ marginLeft: 10,marginRight:90 }}>Rs. {calculateTotalPrice()}</Typography>
+              <Typography variant="h6"  style={{ marginRight: 30 }}>Total Price: <span>Rs. {calculateTotalPrice()}</span> </Typography> 
             </Grid>
             <Grid container justifyContent="center" style={{ marginTop: 20 }}>
               <Button
-                color="black"
+                // color="black"
                 variant="contained"
                 style={{ width: 200,}}
                 onClick={handleDraft}

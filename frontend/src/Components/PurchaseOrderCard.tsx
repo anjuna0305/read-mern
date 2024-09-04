@@ -6,7 +6,7 @@ interface PurchaseOrder {
   orderDate: string;
   customerName: string;
   totalValue: number;
-  status: 'active' | 'draft' | 'completed';
+  status:string;
   onClick?: () => void;
 }
 

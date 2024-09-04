@@ -126,7 +126,7 @@ const Orders:React.FC = () => {
           <CreatePO  />
         ) : (
           <PurchaseOrderReview
-            style={{ marginTop: '200px' }}
+            // style={{ marginTop: '200px' }}
             orderId={poData.orderId}
             orderDate={poData.orderDate}
             customerName={poData.customerName}

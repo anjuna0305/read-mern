@@ -55,11 +55,11 @@ const PurchaseOrderReview: React.FC<PurchaseOrderProps> = ({
     return price + tax - discount;
   }
 
-  const calculateTotalPrice = () => {
-    return items
-      .reduce((acc, item) => acc + item.totalPrice, 0)
-      .toFixed(2);
-  };
+  // const calculateTotalPrice = () => {
+  //   return items
+  //     .reduce((acc, item) => acc + item.totalPrice, 0)
+  //     .toFixed(2);
+  // };
 
 const handleDeleteClick = () => {
     setOpen(true);
