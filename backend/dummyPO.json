@@ -1,0 +1,199 @@
+[
+    {
+      "orderId": "PO10001",
+      "orderDate": "2024-08-01",
+      "customerName": "Alice Johnson",
+      "customerMobile": "0712345678",
+      "items": [
+        {
+          "itemCode": "A1001",
+          "description": "Laptop",
+          "quantity": 2,
+          "taxRate": 5,
+          "discountRate": 10,
+          "unitPrice": 1000
+        },
+        {
+          "itemCode": "A1002",
+          "description": "Mouse",
+          "quantity": 5,
+          "taxRate": 5,
+          "discountRate": 0,
+          "unitPrice": 25
+        }
+      ],
+      "totalValue": 2150,
+      "status": "draft"
+    },
+    {
+      "orderId": "PO10002",
+      "orderDate": "2024-08-02",
+      "customerName": "Bob Williams",
+      "customerMobile": "0723456789",
+      "items": [
+        {
+          "itemCode": "B2001",
+          "description": "Office Chair",
+          "quantity": 10,
+          "taxRate": 10,
+          "discountRate": 15,
+          "unitPrice": 150
+        }
+      ],
+      "totalValue": 1350,
+      "status": "completed"
+    },
+    {
+      "orderId": "PO10003",
+      "orderDate": "2024-08-03",
+      "customerName": "Catherine Brown",
+      "customerMobile": "0734567890",
+      "items": [
+        {
+          "itemCode": "C3001",
+          "description": "Desk",
+          "quantity": 3,
+          "taxRate": 5,
+          "discountRate": 5,
+          "unitPrice": 300
+        },
+        {
+          "itemCode": "C3002",
+          "description": "Monitor",
+          "quantity": 4,
+          "taxRate": 8,
+          "discountRate": 10,
+          "unitPrice": 250
+        }
+      ],
+      "totalValue": 2200,
+      "status": "active"
+    },
+    {
+      "orderId": "PO10004",
+      "orderDate": "2024-08-04",
+      "customerName": "David Smith",
+      "customerMobile": "0745678901",
+      "items": [
+        {
+          "itemCode": "D4001",
+          "description": "Printer",
+          "quantity": 2,
+          "taxRate": 7,
+          "discountRate": 5,
+          "unitPrice": 500
+        }
+      ],
+      "totalValue": 950,
+      "status": "draft"
+    },
+    {
+      "orderId": "PO10005",
+      "orderDate": "2024-08-05",
+      "customerName": "Emily Davis",
+      "customerMobile": "0756789012",
+      "items": [
+        {
+          "itemCode": "E5001",
+          "description": "Keyboard",
+          "quantity": 10,
+          "taxRate": 5,
+          "discountRate": 20,
+          "unitPrice": 50
+        }
+      ],
+      "totalValue": 450,
+      "status": "completed"
+    },
+    {
+      "orderId": "PO10006",
+      "orderDate": "2024-08-06",
+      "customerName": "Frank Miller",
+      "customerMobile": "0767890123",
+      "items": [
+        {
+          "itemCode": "F6001",
+          "description": "Tablet",
+          "quantity": 5,
+          "taxRate": 10,
+          "discountRate": 10,
+          "unitPrice": 300
+        }
+      ],
+      "totalValue": 1350,
+      "status": "active"
+    },
+    {
+      "orderId": "PO10007",
+      "orderDate": "2024-08-07",
+      "customerName": "Grace Lee",
+      "customerMobile": "0778901234",
+      "items": [
+        {
+          "itemCode": "G7001",
+          "description": "Smartphone",
+          "quantity": 8,
+          "taxRate": 15,
+          "discountRate": 5,
+          "unitPrice": 700
+        }
+      ],
+      "totalValue": 5320,
+      "status": "draft"
+    },
+    {
+      "orderId": "PO10008",
+      "orderDate": "2024-08-08",
+      "customerName": "Henry Wilson",
+      "customerMobile": "0789012345",
+      "items": [
+        {
+          "itemCode": "H8001",
+          "description": "Router",
+          "quantity": 4,
+          "taxRate": 7,
+          "discountRate": 10,
+          "unitPrice": 120
+        }
+      ],
+      "totalValue": 432,
+      "status": "completed"
+    },
+    {
+      "orderId": "PO10009",
+      "orderDate": "2024-08-09",
+      "customerName": "Ivy Moore",
+      "customerMobile": "0790123456",
+      "items": [
+        {
+          "itemCode": "I9001",
+          "description": "External Hard Drive",
+          "quantity": 6,
+          "taxRate": 5,
+          "discountRate": 15,
+          "unitPrice": 100
+        }
+      ],
+      "totalValue": 510,
+      "status": "active"
+    },
+    {
+      "orderId": "PO10010",
+      "orderDate": "2024-08-10",
+      "customerName": "Jack Taylor",
+      "customerMobile": "0701234567",
+      "items": [
+        {
+          "itemCode": "J1001",
+          "description": "Scanner",
+          "quantity": 3,
+          "taxRate": 8,
+          "discountRate": 10,
+          "unitPrice": 200
+        }
+      ],
+      "totalValue": 540,
+      "status": "draft"
+    }
+  ]
+  

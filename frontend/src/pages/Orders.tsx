@@ -10,78 +10,7 @@ import Middle from "../Containers/Middle";
 import Right from "../Containers/Right";
 
 
-// const dummyPOs = [
-//     {
-//       "orderId": "PO12345",
-//       "orderDate": "2024-08-20",
-//       "customerName": "John Doe",
-//       "totalValue": 2500,
-//       "status": "draft" // "active" or "completed"
-//     },
-//     {
-//       "orderId": "PO12346",
-//       "orderDate": "2024-08-21",
-//       "customerName": "Jane Smith",
-//       "totalValue": 3400,
-//       "status": "draft"
-//     },
-//     {
-//       "orderId": "PO12347",
-//       "orderDate": "2024-08-22",
-//       "customerName": "Michael Brown",
-//       "totalValue": 1200,
-//       "status": "completed"
-//     },
-//     {
-//       "orderId": "PO12348",
-//       "orderDate": "2024-08-23",
-//       "customerName": "Maria Garcia",
-//       "totalValue": 5000,
-//       "status": "active"
-//     },
-//     {
-//       "orderId": "PO12349",
-//       "orderDate": "2024-08-24",
-//       "customerName": "David Rodriguez",
-//       "totalValue": 800,
-//       "status": "completed"
-//     },
-//     {
-//       "orderId": "PO12350",
-//       "orderDate": "2024-08-25",
-//       "customerName": "Jennifer Wilson",
-//       "totalValue": 10000,
-//       "status": "active"
-//     },
-//     {
-//       "orderId": "PO12351",
-//       "orderDate": "2024-08-26",
-//       "customerName": "James Martinez",
-//       "totalValue": 2000,
-//       "status": "completed"
-//     },
-//     {
-//       "orderId": "PO12352",
-//       "orderDate": "2024-08-27",
-//       "customerName": "Patricia Hernandez",
-//       "totalValue": 3000,
-//       "status": "active"
-//     },
-//     {
-//       "orderId": "PO12353",
-//       "orderDate": "2024-08-28",
-//       "customerName": "Richard Lopez",
-//       "totalValue": 4000,
-//       "status": "completed"
-//     },
-//     {
-//       "orderId": "PO12354",
-//       "orderDate": "2024-08-29",
-//       "customerName": "Linda Gonzalez",
-//       "totalValue": 5000,
-//       "status": "active"
-//     }
-//   ]
+
 
 type PurchaseOrder = {
   orderId: string;
