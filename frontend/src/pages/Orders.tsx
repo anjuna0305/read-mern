@@ -1,5 +1,6 @@
 import { Container } from '@mui/material';
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import CreatePO from "../Components/CreatePO";
 import POSearchBar from "../Components/POSearchBar";
 import PurchaseOrderCard from '../Components/PurchaseOrderCard';
@@ -9,78 +10,87 @@ import Middle from "../Containers/Middle";
 import Right from "../Containers/Right";
 
 
-const dummyPOs = [
-    {
-      "orderId": "PO12345",
-      "orderDate": "2024-08-20",
-      "customerName": "John Doe",
-      "totalValue": 2500,
-      "status": "draft" // "active" or "completed"
-    },
-    {
-      "orderId": "PO12346",
-      "orderDate": "2024-08-21",
-      "customerName": "Jane Smith",
-      "totalValue": 3400,
-      "status": "draft"
-    },
-    {
-      "orderId": "PO12347",
-      "orderDate": "2024-08-22",
-      "customerName": "Michael Brown",
-      "totalValue": 1200,
-      "status": "completed"
-    },
-    {
-      "orderId": "PO12348",
-      "orderDate": "2024-08-23",
-      "customerName": "Maria Garcia",
-      "totalValue": 5000,
-      "status": "active"
-    },
-    {
-      "orderId": "PO12349",
-      "orderDate": "2024-08-24",
-      "customerName": "David Rodriguez",
-      "totalValue": 800,
-      "status": "completed"
-    },
-    {
-      "orderId": "PO12350",
-      "orderDate": "2024-08-25",
-      "customerName": "Jennifer Wilson",
-      "totalValue": 10000,
-      "status": "active"
-    },
-    {
-      "orderId": "PO12351",
-      "orderDate": "2024-08-26",
-      "customerName": "James Martinez",
-      "totalValue": 2000,
-      "status": "completed"
-    },
-    {
-      "orderId": "PO12352",
-      "orderDate": "2024-08-27",
-      "customerName": "Patricia Hernandez",
-      "totalValue": 3000,
-      "status": "active"
-    },
-    {
-      "orderId": "PO12353",
-      "orderDate": "2024-08-28",
-      "customerName": "Richard Lopez",
-      "totalValue": 4000,
-      "status": "completed"
-    },
-    {
-      "orderId": "PO12354",
-      "orderDate": "2024-08-29",
-      "customerName": "Linda Gonzalez",
-      "totalValue": 5000,
-      "status": "active"
-    }
-  ]
+// const dummyPOs = [
+//     {
+//       "orderId": "PO12345",
+//       "orderDate": "2024-08-20",
+//       "customerName": "John Doe",
+//       "totalValue": 2500,
+//       "status": "draft" // "active" or "completed"
+//     },
+//     {
+//       "orderId": "PO12346",
+//       "orderDate": "2024-08-21",
+//       "customerName": "Jane Smith",
+//       "totalValue": 3400,
+//       "status": "draft"
+//     },
+//     {
+//       "orderId": "PO12347",
+//       "orderDate": "2024-08-22",
+//       "customerName": "Michael Brown",
+//       "totalValue": 1200,
+//       "status": "completed"
+//     },
+//     {
+//       "orderId": "PO12348",
+//       "orderDate": "2024-08-23",
+//       "customerName": "Maria Garcia",
+//       "totalValue": 5000,
+//       "status": "active"
+//     },
+//     {
+//       "orderId": "PO12349",
+//       "orderDate": "2024-08-24",
+//       "customerName": "David Rodriguez",
+//       "totalValue": 800,
+//       "status": "completed"
+//     },
+//     {
+//       "orderId": "PO12350",
+//       "orderDate": "2024-08-25",
+//       "customerName": "Jennifer Wilson",
+//       "totalValue": 10000,
+//       "status": "active"
+//     },
+//     {
+//       "orderId": "PO12351",
+//       "orderDate": "2024-08-26",
+//       "customerName": "James Martinez",
+//       "totalValue": 2000,
+//       "status": "completed"
+//     },
+//     {
+//       "orderId": "PO12352",
+//       "orderDate": "2024-08-27",
+//       "customerName": "Patricia Hernandez",
+//       "totalValue": 3000,
+//       "status": "active"
+//     },
+//     {
+//       "orderId": "PO12353",
+//       "orderDate": "2024-08-28",
+//       "customerName": "Richard Lopez",
+//       "totalValue": 4000,
+//       "status": "completed"
+//     },
+//     {
+//       "orderId": "PO12354",
+//       "orderDate": "2024-08-29",
+//       "customerName": "Linda Gonzalez",
+//       "totalValue": 5000,
+//       "status": "active"
+//     }
+//   ]
+
+type PurchaseOrder = {
+  orderId: string;
+  orderDate: string;
+  customerName: string;
+  totalValue: number;
+  status: string;
+  // include other properties as needed
+};
 
   
   const dummyPOPreview = {
@@ -105,12 +115,28 @@ const dummyPOs = [
 
 const Orders:React.FC = () => {
 
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
+
+  useEffect(() => {
+      const fetchPurchaseOrders = async () => {
+          try {
+              const response = await axios.get('http://localhost:5000/api/purchase-orders');
+              setPurchaseOrders(response.data);
+              console.log('Purchase Orders:', response.data);
+          } catch (error) {
+              console.error('Error fetching Purchase Orders:', error);
+          }
+      };
+
+      fetchPurchaseOrders();
+  }, []);
+
   const [selectedPO, setSelectedPO] = useState<string | null>(null); 
   const [poData, setPoData] = useState<any | null>(null); 
 
   const handlePOCardClick = (orderId: string) => {
     console.log('PO card clicked', orderId);
-    const fetchedPO = dummyPOs.find(po => po.orderId === orderId);
+    const fetchedPO = purchaseOrders.find(po => po.orderId === orderId);
     if (fetchedPO) {
       setPoData(dummyPOPreview);
       setSelectedPO(orderId);
@@ -149,7 +175,7 @@ const Orders:React.FC = () => {
           overflow: 'auto',
           maxHeight: 'calc(100vh - 150px)',
         }}>
-            {dummyPOs.map((po) => (
+            {purchaseOrders.map((po) => (
               <PurchaseOrderCard
                 key={po.orderId}
                 orderId={po.orderId}
