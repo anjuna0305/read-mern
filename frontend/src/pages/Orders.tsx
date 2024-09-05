@@ -9,91 +9,88 @@ import Left from "../Containers/Left";
 import Middle from "../Containers/Middle";
 import Right from "../Containers/Right";
 
-
-
-
 type PurchaseOrder = {
   orderId: string;
   orderDate: string;
   customerName: string;
+  customerMobile: string;
   totalValue: number;
   status: string;
-  // include other properties as needed
+  items: {
+    itemCode: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    taxRate: number;
+    discountRate: number;
+    totalPrice: number;
+  }[];
 };
 
-  
-  const dummyPOPreview = {
-    orderId: "PO12345",
-    orderDate: "2024-08-27",
-    customerName: "John Doe",
-    customerMobile: "555-1234",
-    items: [
-      { itemId: "001", description: "Item 1", quantity: 2,unitPrice:250, taxRate: 0.18, discountRate: 0.05, totalPrice: 190.00 },
-      { itemId: "002", description: "Item 2", quantity: 1,unitPrice:280, taxRate: 0.18, discountRate: 0.05, totalPrice: 95.00 },
-      { itemId: "003", description: "Item 3", quantity: 1,unitPrice:320, taxRate: 0.18, discountRate: 0.05, totalPrice: 0.00 },
-      { itemId: "004", description: "Item 4", quantity: 1,unitPrice:810, taxRate: 0.18, discountRate: 0.05, totalPrice: 0.00 },
-    ],
-    totalValue: 285.00,
-    status: "draft"
-  };
-  
-  
+// Fetch PO by orderId from the backend
+const fetchPurchaseOrderById = async (orderId: string): Promise<PurchaseOrder | null> => {
+  try {
+    const response = await axios.get(`http://localhost:5000/api/purchase-orders/${orderId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching PO with ID ${orderId}:`, error);
+    return null;
+  }
+};
 
-
-
-
-const Orders:React.FC = () => {
-
+const Orders: React.FC = () => {
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
+  const [selectedPO, setSelectedPO] = useState<string | null>(null);
+  const [poData, setPoData] = useState<PurchaseOrder | null>(null);
 
   useEffect(() => {
-      const fetchPurchaseOrders = async () => {
-          try {
-              const response = await axios.get('http://localhost:5000/api/purchase-orders');
-              setPurchaseOrders(response.data);
-              console.log('Purchase Orders:', response.data);
-          } catch (error) {
-              console.error('Error fetching Purchase Orders:', error);
-          }
-      };
+    const fetchPurchaseOrders = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/purchase-orders');
+        setPurchaseOrders(response.data);
+        console.log('Purchase Orders:', response.data);
+      } catch (error) {
+        console.error('Error fetching Purchase Orders:', error);
+      }
+    };
 
-      fetchPurchaseOrders();
+    fetchPurchaseOrders();
   }, []);
 
-  const [selectedPO, setSelectedPO] = useState<string | null>(null); 
-  const [poData, setPoData] = useState<any | null>(null); 
-
-  const handlePOCardClick = (orderId: string) => {
+  // Function to handle clicking a PO card and fetching its details
+  const handlePOCardClick = async (orderId: string) => {
     console.log('PO card clicked', orderId);
-    const fetchedPO = purchaseOrders.find(po => po.orderId === orderId);
+    const fetchedPO = await fetchPurchaseOrderById(orderId); // Fetch PO details
     if (fetchedPO) {
-      setPoData(dummyPOPreview);
+      setPoData(fetchedPO);
       setSelectedPO(orderId);
+    } else {
+      console.error('No PO found for ID:', orderId);
     }
   };
+
   return (
     <div>
       <Left>
-        <h1>Ordersasfdwaesfeawsfwefweafawef</h1>
+        <h1>Orders Management</h1>
       </Left>
       <Middle>
         {!selectedPO ? (
-          <CreatePO  />
+          <CreatePO />
         ) : (
           <PurchaseOrderReview
-            // style={{ marginTop: '200px' }}
-            orderId={poData.orderId}
-            orderDate={poData.orderDate}
-            customerName={poData.customerName}
-            customerMobile={poData.customerMobile}
-            items={poData.items}
-            totalValue={poData.totalValue}
-            status={poData.status}
+            orderId={poData?.orderId || ''}
+            orderDate={poData?.orderDate || ''}
+            customerName={poData?.customerName || ''}
+            customerMobile={poData?.customerMobile || ''}
+            items={poData?.items || []}
+            totalValue={poData?.totalValue || 0}
+            status={poData?.status || ''}
             onModify={() => console.log('Modify clicked')}
             onSubmit={() => console.log('Submit clicked')}
             onDelete={() => {
               console.log('Delete clicked');
-              setSelectedPO(null); 
+              setSelectedPO(null); // Deselect the PO
             }}
           />
         )}
@@ -104,19 +101,18 @@ const Orders:React.FC = () => {
           overflow: 'auto',
           maxHeight: 'calc(100vh - 150px)',
         }}>
-            {purchaseOrders.map((po) => (
-              <PurchaseOrderCard
-                key={po.orderId}
-                orderId={po.orderId}
-                orderDate={po.orderDate}
-                customerName={po.customerName}
-                totalValue={po.totalValue}
-                status={po.status}
-                onClick={() => handlePOCardClick(po.orderId)} 
-              />
-            ))}
+          {purchaseOrders.map((po) => (
+            <PurchaseOrderCard
+              key={po.orderId}
+              orderId={po.orderId}
+              orderDate={po.orderDate}
+              customerName={po.customerName}
+              totalValue={po.totalValue}
+              status={po.status}
+              onClick={() => handlePOCardClick(po.orderId)} // Call to fetch the PO details
+            />
+          ))}
         </Container>
-
       </Right>
     </div>
   );

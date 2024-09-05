@@ -104,6 +104,21 @@ app.get('/api/purchase-orders', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/api/purchase-orders/:orderId', async (req: Request, res: Response) => {
+  const orderId = req.params.orderId;
+  try {
+    const purchaseOrder = await PO.findOne
+    ({ orderId });
+    if (purchaseOrder) {
+      res.status(200).json(purchaseOrder);
+    } else {
+      res.status(404).json({ message: 'Purchase Order not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch Purchase Order', error });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
