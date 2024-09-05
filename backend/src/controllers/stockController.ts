@@ -28,7 +28,7 @@ export const createStockItem = async (req: Request, res: Response) => {
             res.status(500).json({ message: 'An unknown error occurred' })
         }
     }
-};
+}
 
 
 // GET ALL STOCK ITEMS
@@ -39,7 +39,7 @@ export const getAllStockItems = async (req: Request, res: Response) => {
     } catch (err: unknown) {
         res.status(500).json({ message: 'Failed to retrieve stock items', error: (err as Error).message })
     }
-};
+}
 
 
 // GET STOCK ITEM BY ID
@@ -53,7 +53,7 @@ export const getStockItemById = async (req: Request, res: Response) => {
     } catch (err: unknown) {
         res.status(500).json({ message: 'Failed to retrieve stock item', error: (err as Error).message })
     }
-};
+}
 
 
 // UPDATE STOCK ITEM
@@ -75,7 +75,7 @@ export const updateStockItem = async (req: Request, res: Response) => {
     } catch (err: unknown) {
         res.status(500).json({ message: 'Failed to update stock item', error: (err as Error).message })
     }
-};
+}
 
 
 // DELETE STOCK ITEM
@@ -90,4 +90,4 @@ export const deleteStockItem = async (req: Request, res: Response) => {
     } catch (err: unknown) {
         res.status(500).json({ message: 'Failed to delete stock item', error: (err as Error).message })
     }
-};
+}

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 const stockItemSchema = new mongoose.Schema({
     itemName: {
@@ -22,8 +22,8 @@ const stockItemSchema = new mongoose.Schema({
         type: String,
         maxlength: [500, 'Description cannot exceed 500 characters'],
     },
-}, { timestamps: true });
+}, { timestamps: true })
 
-const StockItem = mongoose.model("StockItem", stockItemSchema);
+const StockItem = mongoose.model("StockItem", stockItemSchema)
 
-export default StockItem;   
+export default StockItem

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 const POschema = new mongoose.Schema({
   orderId: { type: String, required: true },
@@ -18,8 +18,8 @@ const POschema = new mongoose.Schema({
   ],
   totalValue: { type: Number, required: true }, 
   status: { type: String, required: true },  // Added status to store draft/submitted
-});
+})
 
-const PO = mongoose.model('PurchaseOrder', POschema);
+const PO = mongoose.model('PurchaseOrder', POschema)
 
-export default PO;
+export default PO
