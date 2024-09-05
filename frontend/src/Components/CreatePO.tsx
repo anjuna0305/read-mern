@@ -30,6 +30,7 @@ interface PurchaseOrderFormValues {
   buyer: string;
   buyerConNum: string;
   status: string;
+  totalValue: number;
 }
 
 const fetchItemDetails = async (itemCode: string) => {
@@ -78,6 +79,7 @@ const CreatePO: React.FC = () => {
       buyer: '',
       buyerConNum: '',
       status: 'draft',
+      totalValue: 0,
     },
     validationSchema,
     onSubmit: (values) => {
@@ -195,6 +197,7 @@ const CreatePO: React.FC = () => {
         buyer: formik.values.buyer,
         buyerConNum: formik.values.buyerConNum,
         status: formik.values.status,
+        totalValue: calculateTotalPrice(),
         items,
       });
       console.log(response.data);

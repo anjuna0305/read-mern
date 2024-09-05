@@ -29,32 +29,78 @@ app.get('/api', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Node.js! This is an API endpoint');
 });
 
+interface PurchaseOrderData {
+  poNumber: string;
+  date: string;
+  buyer: string;
+  buyerConNum: string;
+  status: string;
+  totalValue: number; // This should be a number after conversion
+  items: {
+    itemCode: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    taxRate: number;
+    discountRate: number;
+    totalPrice: number;
+  }[];
+}
+
+// Utility function to round numbers
+const roundToTwo = (num: number): number => {
+  return Math.round(num * 100) / 100;
+};
+
+// POST endpoint to save the purchase order
 app.post('/api/purchase-orders', async (req: Request, res: Response) => {
-  const purchaseOrderData = req.body;
+  const purchaseOrderData: PurchaseOrderData = req.body;
   console.log('Received Purchase Order:', purchaseOrderData);
 
+  // Convert totalValue to a number
+  const totalValue = roundToTwo(purchaseOrderData.totalValue);
+
+  // Map and round items' totalPrice to avoid floating-point precision issues
+  const items = purchaseOrderData.items.map(item => ({
+    itemCode: item.itemCode,
+    description: item.description,
+    quantity: item.quantity,
+    taxRate: item.taxRate,
+    discountRate: item.discountRate,
+    unitPrice: item.unitPrice,
+    totalPrice: roundToTwo(item.totalPrice),
+  }));
+
+  // Create new PO document using the cleaned data
   const newPurchaseOrder = new PO({
-    POid: purchaseOrderData.poNumber,
-    date: purchaseOrderData.date,
-    buyerName: purchaseOrderData.buyer,
-    buyerContact: purchaseOrderData.buyerConNum,
-    items: purchaseOrderData.items
+    orderId: purchaseOrderData.poNumber,
+    orderDate: purchaseOrderData.date,
+    customerName: purchaseOrderData.buyer,
+    customerMobile: purchaseOrderData.buyerConNum,
+    items,
+    totalValue,  // No need for toFixed here
+    status: purchaseOrderData.status,
   });
 
   try {
     await newPurchaseOrder.save();
     res.status(200).send({ message: 'Purchase Order received and saved successfully', data: newPurchaseOrder });
   } catch (error) {
-    res.status(500).send({ message: 'Failed to save Purchase Order' });
+    if (error instanceof Error) {
+      res.status(500).send({ message: 'Failed to save Purchase Order', error: error.message });
+    } else {
+      res.status(500).send({ message: 'Failed to save Purchase Order', error: 'Unknown error occurred' });
+    }
   }
 });
 
+// GET endpoint to fetch all purchase orders
 app.get('/api/purchase-orders', async (req: Request, res: Response) => {
   try {
-      const purchaseOrders = await PO.find();
-      res.status(200).json(purchaseOrders);
+    const purchaseOrders = await PO.find();
+    res.status(200).json(purchaseOrders);
   } catch (error) {
-      res.status(500).json({ message: 'Sorry...........Failed to fetch Purchase Orders', error });
+    res.status(500).json({ message: 'Failed to fetch Purchase Orders', error });
   }
 });
 
