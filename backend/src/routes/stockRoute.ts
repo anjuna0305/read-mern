@@ -1,6 +1,5 @@
 import express from "express";
 import {Response, Request} from "express"
-import { getFeedPosts, getUserPosts, likePost } from "../controllers/sampleController";
 import { createStockItem } from "../controllers/stockController";
 // import { verifyToken } from "../middleware/auth.js";
 
@@ -19,10 +18,10 @@ const testFunction2=(req:Request, res:Response)=>{
 /* READ */
 router.get("/", testFunction);
 router.post("/", testFunction2);
-router.get("/:userId/posts", getUserPosts);
+router.get("/:userId/posts", testFunction);
 router.post("/item/create", createStockItem);
 
 /* UPDATE */
-router.patch("/:id/like", likePost);
+router.patch("/:id/like", testFunction);
 
 export default router;

@@ -3,7 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from "dotenv";
 import helmet from "helmet";
-import authRoutes from "./routes/sampleRoute";
+import stockRoutes from "./routes/stockRoute";
 import {
     createPurchaseOrder,
     getPurchaseOrders,
@@ -26,7 +26,7 @@ app.use(cors({
 
 
 /* ROUTES */
-app.use("/auth", authRoutes);
+app.use("/stock", stockRoutes);
 
 
 // Basic routes
