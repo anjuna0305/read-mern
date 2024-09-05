@@ -119,6 +119,23 @@ app.get('/api/purchase-orders/:orderId', async (req: Request, res: Response) => 
   }
 });
 
+// Delete PO endpoint
+app.delete('/api/purchase-orders/:orderId', async (req: Request, res: Response) => {
+  const { orderId } = req.params;
+  try {
+    const deletedPO = await PO.findOneAndDelete({ orderId });
+    if (deletedPO) {
+      res.status(200).json({ message: 'Purchase Order deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Purchase Order not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete Purchase Order', error });
+  }
+});
+
+
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });

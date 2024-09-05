@@ -1,41 +1,34 @@
-// src/Components/POSearchBar.tsx
 import React, { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import Grid from '@mui/material/Grid';
 
-interface POSearchBarProps {
-  onSearch: (orderId: string) => void;
-}
-
-const POSearchBar: React.FC<POSearchBarProps> = ({ onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
+const POSearchBar: React.FC<{ onSearch: (poId: string) => void }> = ({ onSearch }) => {
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = () => {
-    if (searchTerm.trim() !== '') {
-      onSearch(searchTerm.trim());
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
+    onSearch(searchTerm);
   };
 
   return (
-    <Box display="flex" alignItems="center" mb={2}>
-      <TextField
-        label="Search PO by ID"
-        variant="outlined"
-        size="small"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyPress={handleKeyPress}
-        sx={{ marginRight: 1, flex: 1 }}
-      />
-      <Button variant="contained" color="primary" onClick={handleSearch}>
-        Search
-      </Button>
-    </Box>
+    <Grid container justifyContent="center">
+      <Grid item xs={10} style={{
+        marginTop: '10px',}} >
+        <TextField
+          fullWidth
+          label="Search PO by ID"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <IconButton onClick={handleSearch}>
+                <SearchIcon />
+              </IconButton>
+            ),
+          }}
+        />
+      </Grid>
+    </Grid>
   );
 };
 

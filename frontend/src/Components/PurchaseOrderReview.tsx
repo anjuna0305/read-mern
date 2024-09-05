@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Typography, Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { styled } from '@mui/system';
+import axios from 'axios';
 
 const OddTableRow = styled(TableRow)(({ theme }) => ({
     backgroundColor: theme.palette.grey?.[200] || '#e0e0e0',
@@ -69,9 +70,14 @@ const handleClose = () => {
     setOpen(false);
 };
 
-const handleConfirmDelete = () => {
-    onDelete();
+const handleConfirmDelete = async () => {
+  try {
+    await axios.delete(`http://localhost:5000/api/purchase-orders/${orderId}`);
+    onDelete();  // Call the parent's onDelete to update the state
     setOpen(false);
+  } catch (error) {
+    console.error('Error deleting Purchase Order:', error);
+  }
 };
 
 console.log("PurchaseOrderProps", items ,orderId, orderDate, customerName, customerMobile, totalValue, status, onModify, onSubmit, onDelete); // Remove this line
