@@ -15,9 +15,9 @@ type PurchaseOrder = {
   customerName: string;
   customerMobile: string;
   totalValue: number;
-  status: string;
+  status: 'draft' | 'completed'; 
   items: {
-    itemCode: string;
+    itemId: string;
     description: string;
     quantity: number;
     unitPrice: number;
@@ -85,7 +85,7 @@ const Orders: React.FC = () => {
             customerMobile={poData?.customerMobile || ''}
             items={poData?.items || []}
             totalValue={poData?.totalValue || 0}
-            status={poData?.status || ''}
+            status={poData?.status === 'draft' || poData?.status === 'completed' ? poData?.status : 'draft'}
             onModify={() => console.log('Modify clicked')}
             onSubmit={() => console.log('Submit clicked')}
             onDelete={() => {
