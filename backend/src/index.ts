@@ -1,38 +1,41 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import { 
-  createPurchaseOrder, 
-  getPurchaseOrders, 
-  getPurchaseOrderById, 
-  deletePurchaseOrder 
+import dotenv from "dotenv";
+import helmet from "helmet";
+import authRoutes from "./routes/sampleRoute";
+import {
+    createPurchaseOrder,
+    getPurchaseOrders,
+    getPurchaseOrderById,
+    deletePurchaseOrder
 } from './controllers/POcontroller'; // Importing controller functions
 
-const app: Application = express();
-const port = process.env.PORT || 5000;
 
-// Use local MongoDB connection string
-const mongoURI = 'mongodb://localhost:27017/READ-Mern';
-
+/* CONFIGURATIONS */
+dotenv.config();
+const app = express();
 app.use(express.json());
-
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(cors({
-  origin: 'http://localhost:5173',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
+    origin: 'http://localhost:5173',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
 }));
 
-mongoose.connect(mongoURI)
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch(err => console.error('MongoDB connection error:', err));
+
+/* ROUTES */
+app.use("/auth", authRoutes);
+
 
 // Basic routes
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, TypeScript with Node.js!');
+    res.send('Hello, TypeScript with Node.js!');
 });
 
 app.get('/api', (req: Request, res: Response) => {
-  res.send('Hello, TypeScript with Node.js! This is an API endpoint');
+    res.send('Hello, TypeScript with Node.js! This is an API endpoint');
 });
 
 // Purchase Order routes
@@ -41,6 +44,17 @@ app.get('/api/purchase-orders', getPurchaseOrders); // GET: Fetch all Purchase O
 app.get('/api/purchase-orders/:orderId', getPurchaseOrderById); // GET: Fetch PO by ID
 app.delete('/api/purchase-orders/:orderId', deletePurchaseOrder); // DELETE: Delete PO
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+
+/* MONGOOSE SETUP */
+const PORT = process.env.PORT || 5000;
+const mongo_url = process.env.MONGO_URL ? process.env.MONGO_URL : ""
+
+mongoose
+    .connect(mongo_url)
+    .then(() => {
+        app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+        /* ADD DATA ONE TIME */
+        // User.insertMany(users);
+        // Post.insertMany(posts);
+    })
+    .catch((error) => console.log(`${error} did not connect`));
