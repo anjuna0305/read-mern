@@ -15,7 +15,7 @@ export const createStockItem = async (req: Request, res: Response) => {
             description,
         })
 
-        await newItem.save();
+        await newItem.save()
         res.status(201).json({ message: 'Stock item created successfully', newItem })
     } catch (err) {
         if (err instanceof mongoose.Error.ValidationError) {
@@ -65,7 +65,7 @@ export const updateStockItem = async (req: Request, res: Response) => {
             req.params.id,
             { quantity, price, description },
             { new: true, runValidators: true }
-        );
+        )
 
         if (!updatedItem) {
             return res.status(404).json({ message: 'Stock item not found' })
