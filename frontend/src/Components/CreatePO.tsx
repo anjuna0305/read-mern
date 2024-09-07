@@ -187,7 +187,6 @@ const CreatePO: React.FC = () => {
   };
 
   const handleSubmit = async() => {
-    formik.setFieldValue('status', 'submitted');
     formik.submitForm();
 
     try {
@@ -196,7 +195,7 @@ const CreatePO: React.FC = () => {
         date: formik.values.date,
         buyer: formik.values.buyer,
         buyerConNum: formik.values.buyerConNum,
-        status: formik.values.status,
+        status: "completed",
         totalValue: calculateTotalPrice(),
         items,
       });
@@ -210,9 +209,25 @@ const CreatePO: React.FC = () => {
   const handleCancel = () => {
     formik.resetForm();
   };
-  const handleDraft = () => {
+  const handleDraft = async() => {
     formik.setFieldValue('status', 'draft');
     formik.submitForm();
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/purchase-orders', {
+        poNumber: formik.values.poNumber,
+        date: formik.values.date,
+        buyer: formik.values.buyer,
+        buyerConNum: formik.values.buyerConNum,
+        status: "draft",
+        totalValue: calculateTotalPrice(),
+        items,
+      });
+      console.log(response.data);
+    }
+    catch (error) {
+      console.error(error);
+    }
   }; 
 
   return (

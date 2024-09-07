@@ -9,6 +9,11 @@ export interface IUser extends Document {
 }
 
 const UserSchema: Schema = new Schema({
+    usertype: {
+    type: String,
+    required: true,
+    trim: true,
+    },
   username: {
     type: String,
     required: true,

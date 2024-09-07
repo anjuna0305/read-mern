@@ -1,9 +1,9 @@
-
+import Login from "../Components/LogInCard"
 
 const TestPage = () => {
     return (
         <div>
-            <h1>Test Page</h1>
+            <Login />
         </div>
     )
 }

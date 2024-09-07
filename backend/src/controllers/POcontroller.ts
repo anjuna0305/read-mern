@@ -20,7 +20,7 @@ interface PurchaseOrderData {
 }
 
 // Utility function to round numbers
-const roundToTwo = (num: number): number => {
+export const roundToTwo = (num: number): number => {
   return Math.round(num * 100) / 100
 }
 

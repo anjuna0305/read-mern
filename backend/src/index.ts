@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import dotenv from "dotenv"
 import helmet from "helmet"
 import stockRoutes from "./routes/stockRoute"
+import PORouts from './routes/POrouts'
 import {
     createPurchaseOrder,
     getPurchaseOrders,
@@ -38,14 +39,9 @@ app.get('/api', (req: Request, res: Response) => {
     res.send('Hello, TypeScript with Node.js! This is an API endpoint')
 })
 
-// Purchase Order routes
-app.post('/api/purchase-orders', createPurchaseOrder) // POST: Create Purchase Order
-app.get('/api/purchase-orders', getPurchaseOrders) // GET: Fetch all Purchase Orders
-app.get('/api/purchase-orders/:orderId', getPurchaseOrderById) // GET: Fetch PO by ID
-app.delete('/api/purchase-orders/:orderId', deletePurchaseOrder) // DELETE: Delete PO
+app.use('/api', PORouts)
 
 
-/* MONGOOSE SETUP */
 const PORT = process.env.PORT || 5000
 const mongo_url = process.env.MONGO_URL ? process.env.MONGO_URL : ""
 
@@ -53,8 +49,5 @@ mongoose
     .connect(mongo_url)
     .then(() => {
         app.listen(PORT, () => console.log(`Server Port: ${PORT}`))
-        /* ADD DATA ONE TIME */
-        // User.insertMany(users)
-        // Post.insertMany(posts)
     })
     .catch((error) => console.log(`${error} did not connect`))
