@@ -1,10 +1,13 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import HomePage from './pages/HomePage'
 import Orders from './pages/Orders'
 import TestPage from './pages/TestPage'
+import StockPage from './pages/StockPage'
+import StockSearch from './Containers/StockSearch'
+import CreateNewStockItem from './Components/CreateNewStockItem'
+import AllStockItems from './Components/AllStockItems'
 
 const router = createBrowserRouter([
     {
@@ -20,6 +23,24 @@ const router = createBrowserRouter([
         path: "/test",
         element: <TestPage />,
     },
+    {
+        path: "/stock",
+        element: <StockPage />,
+        children: [
+            {
+                path: "search",
+                element: <StockSearch />
+            },
+            {
+                path: "add-new",
+                element: <CreateNewStockItem/>
+            },
+            {
+                path: "all",
+                element: <AllStockItems/>
+            }
+        ]
+    }
 ])
 
 console.log('Hello, world!')
