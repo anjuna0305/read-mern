@@ -1,56 +1,41 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import bcrypt from 'bcrypt';
+// src/models/User.ts
+import mongoose, { Document, Schema, Model } from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
+  role: 'admin' | 'cashier' | 'stock_manager';
   validatePassword(password: string): Promise<boolean>;
 }
 
-const UserSchema: Schema = new Schema({
-    usertype: {
-    type: String,
-    required: true,
-    trim: true,
-    },
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
+// Extending Mongoose Document with IUser interface
+const UserSchema: Schema<IUser> = new mongoose.Schema({
+  username: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['admin', 'cashier', 'stock_manager'], required: true },
 });
 
-// Hash the password before saving it to the database
-UserSchema.pre('save', async function (next) {
-  const user = this as IUser;
+// Password hashing middleware
+UserSchema.pre<IUser>('save', async function (next) {
+  const user = this;
   if (!user.isModified('password')) return next();
 
   try {
     const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(user.password, salt);
-    user.password = hash;
+    user.password = await bcrypt.hash(user.password, salt);
     next();
   } catch (err) {
-    return next(err);
+    next(err as Error);
   }
 });
 
-// Method to validate password
-UserSchema.methods.validatePassword = async function (password: string) {
-  return await bcrypt.compare(password, this.password);
+// Password validation method
+UserSchema.methods.validatePassword = async function (password: string): Promise<boolean> {
+  return bcrypt.compare(password, this.password);
 };
 
-const User = mongoose.model<IUser>('User', UserSchema);
+const User: Model<IUser> = mongoose.model<IUser>('User', UserSchema);
 export default User;

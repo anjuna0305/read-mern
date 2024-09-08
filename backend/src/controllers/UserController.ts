@@ -1,27 +1,49 @@
 import express, { Request, Response } from 'express';
 import User from '../models/User';
+import bcrypt from 'bcryptjs';
+import { Session } from 'express-session'; // Import the Session type from 'express-session'
+
 
 const router = express.Router();
 
 // Registration Route
+// ...
+
 router.post('/register', async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
+    const { username, email, password } = req.body;
 
-  try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email is already registered.' });
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email is already registered.' });
+        }
+
+        const newUser = new User({ username, email, password });
+        await newUser.save();
+
+        // Cast the req.session object to the Session type
+        (req.session as Session).userId = newUser._id;  // Start session
+        res.status(201).json({ message: 'User registered successfully.', user: newUser });
+    } catch (error) {
+        res.status(500).json({ message: 'Error during registration.', error });
     }
-
-    const newUser = new User({ username, email, password });
-    await newUser.save();
-
-    req.session.userId = newUser._id;  // Start session
-    res.status(201).json({ message: 'User registered successfully.', user: newUser });
-  } catch (error) {
-    res.status(500).json({ message: 'Error during registration.', error });
   }
 });
+
+
+const createUser = async () => {
+  const hashedPassword = await bcrypt.hash('password123', 10);
+  const newUser = new User({
+    username: 'admin',
+    password: hashedPassword,
+    role: 'admin',
+  });
+
+  await newUser.save();
+};
+
+createUser().then(() => console.log('User created'));
+
 
 // Login Route
 router.post('/login', async (req: Request, res: Response) => {

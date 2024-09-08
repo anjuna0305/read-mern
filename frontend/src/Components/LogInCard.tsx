@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { JSXElementConstructor, useState } from 'react';
 import { Grid, TextField, Button, Typography, Link, Box } from '@mui/material';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/system';
+import axios from 'axios';  // Import Axios
+import { useNavigate } from 'react-router-dom'; // For redirection after login
 
 const Login = () => {
   const theme = useTheme();
@@ -9,6 +11,8 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
+  const [loginError, setLoginError] = useState(''); // To store server login error
+  const navigate = useNavigate(); // For navigation after successful login
 
   const validateForm = () => {
     let valid = true;
@@ -26,13 +30,26 @@ const Login = () => {
     return valid;
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (validateForm()) {
-      console.log('Logging in with:', { email, password });
-      // Handle login logic here
+const handleSubmit = async (event: React.FormEvent) => {
+  event.preventDefault();
+  if (validateForm()) {
+    try {
+        const response = await axios.post(
+            'http://localhost:5000/auth/login',
+            { email, password },
+            { withCredentials: true } 
+        );
+        
+        if (response.status === 200) {
+            console.log('Login successful:', response.data);
+            navigate('/dashboard'); // Redirect to dashboard after successful login
+        }
+    } catch (error: any) {
+        console.error('Error logging in:', error.response.data.message);
+        setLoginError(error.response.data.message);
     }
-  };
+  }
+};
 
   return (
     <Grid
@@ -114,7 +131,7 @@ const Login = () => {
           </Typography>
         )}
 
-        <form onSubmit={handleSubmit} style={{ width:'100%', maxWidth: '400px' }}>
+        <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '400px' }}>
           <TextField
             label="Email"
             variant="outlined"
@@ -145,6 +162,14 @@ const Login = () => {
             }}
             InputLabelProps={{ sx: { color: '#94a3b8' } }}
           />
+
+          {loginError && (
+            <Typography
+              sx={{ color: 'red', fontSize: '0.875rem', marginTop: '0.5rem' }}
+            >
+              {loginError}
+            </Typography>
+          )}
 
           <Button
             type="submit"
