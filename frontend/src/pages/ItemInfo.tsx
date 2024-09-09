@@ -30,7 +30,14 @@ const validationSchema = Yup.object({
 });
 
 
-const ItemInfo = ({ item }: StockItemDetailsProps) => {
+const ItemInfo = () => {
+    const item = {
+        itemName: "dummy name",
+        quantity: 10,
+        price: 200,
+        description: "dummy description"
+    }
+
     const formik = useFormik({
         initialValues: {
             itemName: item.itemName,

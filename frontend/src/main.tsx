@@ -1,28 +1,65 @@
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import HomePage from './pages/HomePage'
-import Orders from './pages/Orders'
-import TestPage from './pages/TestPage'
-import StockPage from './pages/StockPage'
-import StockSearch from './Containers/StockSearch'
-import CreateNewStockItem from './Components/CreateNewStockItem'
-import AllStockItems from './Components/AllStockItems'
-import ItemInfo from './pages/ItemInfo'
-
-const dummyItem = {
-    itemName: "Wooden Chair",
-    quantity: 50,
-    price: 2500,
-    description: "A comfortable wooden chair with a smooth finish.",
-};
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AllStockItems from "./Components/AllStockItems";
+import CreateNewStockItem from "./Components/CreateNewStockItem";
+import PrivateRoute from "./Components/PrivateRoute"; // Import PrivateRoute
+import StockSearch from "./Containers/StockSearch";
+import { AuthProvider } from "./context/AuthContext"; // Import AuthProvider
+import "./index.css";
+import AddUserPage from "./pages/AddUser";
+import HomePage from "./pages/HomePage";
+import Orders from "./pages/Orders";
+import StockPage from "./pages/StockPage";
+import { default as LoginPage, default as TestPage } from "./pages/TestPage";
+import ItemInfo from "./pages/ItemInfo";
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <HomePage />,
-
-    },
+  {
+    path: "/",
+    element: <HomePage />,
+  },
+  {
+    path: "/orders",
+    element: (
+      <PrivateRoute requiredRole="cashier">
+        <Orders />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/test",
+    element: <TestPage />,
+  },
+  {
+    path: "/adduser",
+    element: (
+      <PrivateRoute requiredRole="admin">
+        <AddUserPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/stock",
+    element: <StockPage />,
+    children: [
+      {
+        path: "search",
+        element: <StockSearch />,
+      },
+      {
+        path: "add-new",
+        element: <CreateNewStockItem />,
+      },
+      {
+        path: "all",
+        element: <AllStockItems />,
+      },
+    ],
+  },
+  {
+    path: "/login", // Add login route
+    element: <LoginPage />,
+  },
     {
         path: "/orders",
         element: <Orders />,
@@ -49,7 +86,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "item",
-                element: <ItemInfo item={dummyItem} />
+                element: <ItemInfo />
             }
         ]
     }
@@ -57,6 +94,8 @@ const router = createBrowserRouter([
 
 console.log('Hello, world!')
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <AuthProvider>
     <RouterProvider router={router} />
-)
+  </AuthProvider>
+);
