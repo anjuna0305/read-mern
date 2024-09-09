@@ -12,8 +12,12 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mui/icons-material": "^6.0.0",
+    "@mui/icons-material": "^6.0.2",
     "@mui/material": "^6.0.2",
+    "@mui/x-charts": "^7.16.0",
+    "@mui/x-data-grid": "^7.16.0",
+    "@mui/x-date-pickers": "^7.16.0",
+    "@mui/x-tree-view": "^7.16.0",
     "axios": "^1.7.7",
     "formik": "^2.4.6",
     "prop-types": "^15.8.1",

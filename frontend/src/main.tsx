@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
@@ -9,6 +8,10 @@ import AddUserPage from './pages/AddUser'
 import LoginPage from './pages/TestPage' // Import LoginPage
 import { AuthProvider } from './context/AuthContext' // Import AuthProvider
 import PrivateRoute from './Components/PrivateRoute' // Import PrivateRoute
+import StockPage from './pages/StockPage'
+import StockSearch from './Containers/StockSearch'
+import CreateNewStockItem from './Components/CreateNewStockItem'
+import AllStockItems from './Components/AllStockItems'
 
 const router = createBrowserRouter([
     {
@@ -34,6 +37,25 @@ const router = createBrowserRouter([
             </PrivateRoute>
         ), 
     },
+    {
+        path: "/stock",
+        element: <StockPage />,
+        children: [
+            {
+                path: "search",
+                element: <StockSearch />
+            },
+            {
+                path: "add-new",
+                element: <CreateNewStockItem/>
+            },
+            {
+                path: "all",
+                element: <AllStockItems/>
+            }
+        ]
+    }
+])
 
     {
         path: "/login", // Add login route
@@ -42,9 +64,7 @@ const router = createBrowserRouter([
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
         <AuthProvider>
             <RouterProvider router={router} />
         </AuthProvider>
-    </React.StrictMode>,
 )

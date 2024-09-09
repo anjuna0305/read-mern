@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import mongoose from 'mongoose'
+import mongoose  from 'mongoose'
 import StockItem from '../models/stockItemModel'
 
 
@@ -15,7 +15,7 @@ export const createStockItem = async (req: Request, res: Response) => {
             description,
         })
 
-        await newItem.save();
+        await newItem.save()
         res.status(201).json({ message: 'Stock item created successfully', newItem })
     } catch (err) {
         if (err instanceof mongoose.Error.ValidationError) {
@@ -33,6 +33,7 @@ export const createStockItem = async (req: Request, res: Response) => {
 
 // GET ALL STOCK ITEMS
 export const getAllStockItems = async (req: Request, res: Response) => {
+    console.log("get all items called")
     try {
         const items = await StockItem.find()
         res.status(200).json(items)
@@ -65,7 +66,7 @@ export const updateStockItem = async (req: Request, res: Response) => {
             req.params.id,
             { quantity, price, description },
             { new: true, runValidators: true }
-        );
+        )
 
         if (!updatedItem) {
             return res.status(404).json({ message: 'Stock item not found' })
@@ -91,3 +92,38 @@ export const deleteStockItem = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Failed to delete stock item', error: (err as Error).message })
     }
 }
+
+// SEARCH ITEMS
+export const searchStockItemsByName = async (req: Request, res: Response) => {
+    try {
+        const { name } = req.query
+
+        if (!name || typeof name !== 'string') {
+            return res.status(400).json({ message: 'Please provide a valid name to search for.' })
+        }
+
+        const items = await searchStockItems(name)
+
+        if (items.length === 0) {
+            return res.status(404).json({ message: `No stock items found matching "${name}".` })
+        }
+
+        res.status(200).json(items);
+    } catch (err: unknown) {
+        res.status(500).json({ message: 'Failed to search stock items', error: (err as Error).message })
+    }
+};
+
+
+// uitility functions
+export const searchStockItems = async (name: string) => {
+    if (!name || typeof name !== 'string') {
+        throw new Error('Invalid name provided for search');
+    }
+
+    const items = await StockItem.find({
+        itemName: { $regex: new RegExp(name, 'i') } // i for case insensitive
+    });
+
+    return items;
+};
