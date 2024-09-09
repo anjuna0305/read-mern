@@ -1,0 +1,33 @@
+[
+    {
+      "username": "adminUser",
+      "email": "admin@example.com",
+      "password": "$2b$10$kG.P5YUkEjFXKRoafOcKBOBe1V5N/96h4q1jMBFr3r2fSAqqCVN.O",
+      "role": "admin"
+    },
+    {
+      "username": "cashierUser",
+      "email": "cashier@example.com",
+      "password": "$2b$10$6R7HJbkHCsEy7AnGmK5V4ecGVpjGueLsM7DpOk5jDZnPblJ2NGcWa",
+      "role": "cashier"
+    },
+    {
+      "username": "stockManagerUser",
+      "email": "stockmanager@example.com",
+      "password": "$2b$10$9ovT0RjNnywZkMn5JQqL7OEKvJc.uCDc/IiSXz2HlHDmZlFmvEYLO",
+      "role": "stock_manager"
+    },
+    {
+      "username": "userOne",
+      "email": "user1@example.com",
+      "password": "$2b$10$0QZVgi.Fo.VVtUtgFD.9teDsZelZgkWqYO4guMGo.hoILV/Q6wwhC",
+      "role": "cashier"
+    },
+    {
+      "username": "userTwo",
+      "email": "user2@example.com",
+      "password": "$2b$10$nZxdXHDVVJt9pB5Iif9U5eQzeQY5EXgJjxHt8U/j1H7LGrNHEf2z2",
+      "role": "admin"
+    }
+  ]
+  
