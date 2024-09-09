@@ -3,16 +3,15 @@ import passport from 'passport';
 
 const router = express.Router();
 
-// Endpoint to fetch the authenticated user
 router.get('/me', (req, res) => {
+  console.log('req.isAuthenticated()', req.isAuthenticated());
     if (req.isAuthenticated()) {
         res.status(200).json({ user: req.user });
     } else {
-        res.status(401).json({ user: null, message: 'Not authenticated***' });
+        res.status(401).json({ user: null, message: 'Not authenticated ***' });
     }
 });
 
-// Endpoint to handle login
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err: any, user:any, info:any) => {
         if (err) {

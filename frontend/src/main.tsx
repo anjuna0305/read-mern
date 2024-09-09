@@ -20,7 +20,7 @@ const router = createBrowserRouter([
         element: (
         <PrivateRoute requiredRole="cashier">
                 <Orders />
-            </PrivateRoute>),
+        </PrivateRoute>),
     },
     {
         path: "/test",

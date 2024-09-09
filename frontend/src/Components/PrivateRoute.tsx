@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -9,18 +9,25 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, requiredRole }) => {
   const { isAuthenticated, user } = useAuth();
+  const [authStateChecked, setAuthStateChecked] = useState(false);
 
-  if (!isAuthenticated) {
-    console.log('User is not authenticated');
-    return <Navigate to="/login" />;
+  useEffect(() => {
+    const checkAuth = () => {
+      if (!isAuthenticated) {
+        return <Navigate to="/login" />;
+      } else if (requiredRole && user.role !== requiredRole) {
+        return <Navigate to="/unauthorized" />;
+      }
+      setAuthStateChecked(true);
+    };
+    checkAuth();
+  }, [isAuthenticated, user, requiredRole]);
+
+  if (!authStateChecked) {
+    return null; 
   }
 
-  else if (requiredRole && user.role !== requiredRole) {
-    console.log('User is not authorized');
-    return <Navigate to="/unauthorized" />;
-  }
-
-  return children;
+  return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;

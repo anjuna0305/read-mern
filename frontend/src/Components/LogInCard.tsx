@@ -1,18 +1,20 @@
-import React, { JSXElementConstructor, useState } from 'react';
+import React, { useState } from 'react';
 import { Grid, TextField, Button, Typography, Link, Box } from '@mui/material';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/system';
-import axios from 'axios';  // Import Axios
-import { useNavigate } from 'react-router-dom'; // For redirection after login
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
-  const [loginError, setLoginError] = useState(''); // To store server login error
-  const navigate = useNavigate(); // For navigation after successful login
+  const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate();
 
   const validateForm = () => {
     let valid = true;
@@ -30,52 +32,21 @@ const Login = () => {
     return valid;
   };
 
-const handleSubmit = async (event: React.FormEvent) => {
-  event.preventDefault();
-  if (validateForm()) {
-    try {
-        const response = await axios.post(
-            'http://localhost:5000/auth/login',
-            { email, password },
-            { withCredentials: true } 
-        );
-        
-        if (response.status === 200) {
-            console.log('Login successful:  ', response.data);
-            console.log('Message fron backend:  ', response.data.message);
-            if (response.data.user.role === 'admin') {
-                navigate('/adduser'); 
-            }
-            else if (response.data.user.role === 'cashier') {
-                navigate('/orders'); 
-            }
-            else if (response.data.user.role === 'stock-manager') {
-                navigate('/stock-manager/dashboard'); 
-            }
-            else {
-                navigate('/dashboard'); 
-            }
-        }
-    } catch (error: any) {
-        console.error('Error logging in:', error.response.data.message);
-        setLoginError(error.response.data.message);
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (validateForm()) {
+      try {
+        await login(email, password);
+        navigate('/');
+      } catch (error: any) {
+        setLoginError('Invalid email or password');
+      }
     }
-  }
-};
+  };
 
   return (
-    <Grid
-      container
-      spacing={isMobile ? 2 : 0}
-      direction={isMobile ? 'column' : 'row'}
-      justifyContent="center"
-      alignItems="center"
-      sx={{
-        minHeight: '100vh',
-        background: 'linear-gradient(to bottom right, #111827, #1f2937)',
-        padding: 4,
-      }}
-    >
+    <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: '100vh' }}>
+    
       {/* Left section for web (Company logo and greeting) */}
       <Grid
         item
