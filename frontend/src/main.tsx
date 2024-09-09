@@ -10,6 +10,13 @@ import CreateNewStockItem from './Components/CreateNewStockItem'
 import AllStockItems from './Components/AllStockItems'
 import ItemInfo from './pages/ItemInfo'
 
+const dummyItem = {
+    itemName: "Wooden Chair",
+    quantity: 50,
+    price: 2500,
+    description: "A comfortable wooden chair with a smooth finish.",
+};
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -42,7 +49,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "item",
-                element: <ItemInfo />
+                element: <ItemInfo item={dummyItem} />
             }
         ]
     }
