@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
+  
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { login } = useAuth();
@@ -15,6 +16,7 @@ const Login = () => {
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
+  let user: any;
 
   const validateForm = () => {
     let valid = true;
@@ -36,8 +38,17 @@ const Login = () => {
     event.preventDefault();
     if (validateForm()) {
       try {
-        await login(email, password);
-        navigate('/');
+        user = await login(email, password);
+        console.log('Logged in as:', user);
+        if (user.role === 'admin') {
+          navigate('/adduser');
+        }
+        else if(user.role === 'cashier') {
+          navigate('/orders');
+        }
+        else{
+          navigate('/menu');
+        }
       } catch (error: any) {
         setLoginError('Invalid email or password');
       }
@@ -45,8 +56,18 @@ const Login = () => {
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: '100vh' }}>
-    
+    <Grid
+      container
+      spacing={isMobile ? 2 : 0}
+      direction={isMobile ? 'column' : 'row'}
+      justifyContent="center"
+      alignItems="center"
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(to bottom right, #111827, #1f2937)',
+        padding: 4,
+      }}
+    >
       {/* Left section for web (Company logo and greeting) */}
       <Grid
         item
