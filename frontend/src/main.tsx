@@ -8,6 +8,7 @@ import StockPage from './pages/StockPage'
 import StockSearch from './Containers/StockSearch'
 import CreateNewStockItem from './Components/CreateNewStockItem'
 import AllStockItems from './Components/AllStockItems'
+import ItemInfo from './pages/ItemInfo'
 
 const router = createBrowserRouter([
     {
@@ -33,11 +34,15 @@ const router = createBrowserRouter([
             },
             {
                 path: "add-new",
-                element: <CreateNewStockItem/>
+                element: <CreateNewStockItem />
             },
             {
                 path: "all",
-                element: <AllStockItems/>
+                element: <AllStockItems />
+            },
+            {
+                path: "item",
+                element: <ItemInfo />
             }
         ]
     }
