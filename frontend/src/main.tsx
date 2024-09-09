@@ -6,16 +6,21 @@ import HomePage from './pages/HomePage'
 import Orders from './pages/Orders'
 import TestPage from './pages/TestPage'
 import AddUserPage from './pages/AddUser'
+import LoginPage from './pages/TestPage' // Import LoginPage
+import { AuthProvider } from './context/AuthContext' // Import AuthProvider
+import PrivateRoute from './Components/PrivateRoute' // Import PrivateRoute
 
 const router = createBrowserRouter([
     {
-        path: "/1",
+        path: "/",
         element: <HomePage />,
-
     },
     {
         path: "/orders",
-        element: <Orders />,
+        element: (
+        <PrivateRoute requiredRole="cashier">
+                <Orders />
+            </PrivateRoute>),
     },
     {
         path: "/test",
@@ -23,14 +28,23 @@ const router = createBrowserRouter([
     },
     {
         path: "/adduser",
-        element: <AddUserPage />,
+        element: (
+            <PrivateRoute requiredRole="admin">
+                <AddUserPage />
+            </PrivateRoute>
+        ), 
+    },
+
+    {
+        path: "/login", // Add login route
+        element: <LoginPage />,
     },
 ])
 
-console.log('Hello, world!')
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <AuthProvider>
+            <RouterProvider router={router} />
+        </AuthProvider>
     </React.StrictMode>,
 )

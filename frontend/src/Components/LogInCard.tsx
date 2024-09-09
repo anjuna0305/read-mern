@@ -41,8 +41,20 @@ const handleSubmit = async (event: React.FormEvent) => {
         );
         
         if (response.status === 200) {
-            console.log('Login successful:', response.data);
-            navigate('/dashboard'); // Redirect to dashboard after successful login
+            console.log('Login successful:  ', response.data);
+            console.log('Message fron backend:  ', response.data.message);
+            if (response.data.user.role === 'admin') {
+                navigate('/adduser'); 
+            }
+            else if (response.data.user.role === 'cashier') {
+                navigate('/orders'); 
+            }
+            else if (response.data.user.role === 'stock-manager') {
+                navigate('/stock-manager/dashboard'); 
+            }
+            else {
+                navigate('/dashboard'); 
+            }
         }
     } catch (error: any) {
         console.error('Error logging in:', error.response.data.message);
