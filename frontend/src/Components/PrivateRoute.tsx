@@ -14,20 +14,29 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, requiredRole }) =
   useEffect(() => {
     const checkAuth = () => {
       if (!isAuthenticated) {
-        return <Navigate to="/login" />;
+        console.log('Not authenticated');
       } else if (requiredRole && user.role !== requiredRole) {
-        return <Navigate to="/unauthorized" />;
+        console.log('This is not for you :', user.role);
       }
       setAuthStateChecked(true);
     };
+    
     checkAuth();
   }, [isAuthenticated, user, requiredRole]);
 
   if (!authStateChecked) {
-    return null; 
+    return <div>Loading...</div>;
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
+    return <Navigate to="/unauthorized" />;
+  }
+
+  return children;
 };
 
 export default PrivateRoute;
