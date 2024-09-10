@@ -10,12 +10,17 @@ import AddUserPage from "./pages/AddUser";
 import HomePage from "./pages/HomePage";
 import Orders from "./pages/Orders";
 import StockPage from "./pages/StockPage";
+import NoAccessPage from "./pages/NoAccess";
 import { default as LoginPage, default as TestPage } from "./pages/TestPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+  },
+  {
+    path: "/unauthorized",
+    element: <NoAccessPage />,
   },
   {
     path: "/orders",
@@ -39,24 +44,40 @@ const router = createBrowserRouter([
   },
   {
     path: "/stock",
-    element: <StockPage />,
+    element: (
+      <PrivateRoute requiredRole="stock_manager">
+        <StockPage />
+      </PrivateRoute>
+    ),
     children: [
       {
         path: "search",
-        element: <StockSearch />,
+        element: (
+          <PrivateRoute requiredRole="stock_manager">
+            <StockSearch />
+          </PrivateRoute>
+        ),
       },
       {
         path: "add-new",
-        element: <CreateNewStockItem />,
+        element: (
+          <PrivateRoute requiredRole="stock_manager">
+            <CreateNewStockItem />
+          </PrivateRoute>
+        ),
       },
       {
         path: "all",
-        element: <AllStockItems />,
+        element: (
+          <PrivateRoute requiredRole="stock_manager">
+            <AllStockItems />
+          </PrivateRoute>
+        ),
       },
     ],
   },
   {
-    path: "/login", // Add login route
+    path: "/login",
     element: <LoginPage />,
   },
 ]);

@@ -47,7 +47,7 @@ const Login = () => {
           navigate('/orders');
         }
         else{
-          navigate('/menu');
+          navigate('/stock');
         }
       } catch (error: any) {
         setLoginError('Invalid email or password');

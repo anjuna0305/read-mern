@@ -19,11 +19,13 @@ const LogoutButton = () => {
       onClick={handleLogout}
       sx={{
         maxWidth: '200px',
+        marginTop: '200px',
+
         width: '100%',
         backgroundColor: '#f44336', // Red background color
         color: '#fff',
         '&:hover': {
-          backgroundColor: '#d32f2f', // Darker red on hover
+          backgroundColor: '#d32f2f', 
         },
       }}
     >

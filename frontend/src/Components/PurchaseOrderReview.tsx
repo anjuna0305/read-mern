@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
-import { Button, Typography, Box, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 const OddTableRow = styled(TableRow)(({ theme }) => ({
-    backgroundColor: theme.palette.grey?.[200] || '#e0e0e0',
+  backgroundColor: theme.palette.grey?.[200] || '#e0e0e0',
 }));
 
 const EvenTableRow = styled(TableRow)(({ theme }) => ({
-    backgroundColor: theme.palette.grey?.[50] || '#f5f5f5',
+  backgroundColor: theme.palette.grey?.[50] || '#f5f5f5',
 }));
 
 interface Item {
@@ -26,7 +42,7 @@ interface PurchaseOrderProps {
   orderDate: string;
   customerName: string;
   customerMobile: string;
-  items?: Item[]; 
+  items?: Item[];
   totalValue: number;
   status: 'draft' | 'completed';
   onModify: () => void;
@@ -47,10 +63,47 @@ const PurchaseOrderReview: React.FC<PurchaseOrderProps> = ({
   onDelete,
 }) => {
   const [open, setOpen] = useState(false);
-  const [editedItems, setEditedItems] = useState<Item[]>(items);  // State to handle edits
-  const [originalItems, setOriginalItems] = useState<Item[]>([...items]);  // Store original items before modification
-  const [newItemId, setNewItemId] = useState<string>('');
-  const [newItemQuantity, setNewItemQuantity] = useState<number>(1);
+  const [isEditing, setIsEditing] = useState(false);
+  const [modifiedItems, setModifiedItems] = useState([...items]);
+  const [newItem, setNewItem] = useState({ description: '', quantity: 0 });
+
+  const handleModifyClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleAddItem = () => {
+    setModifiedItems([...modifiedItems, { ...newItem, itemId: `new-`, unitPrice: 0, taxRate: 0, discountRate: 0, totalPrice: 0 }]);
+    setNewItem({ description: '', quantity: 0 });
+  };
+
+  const handleRemoveItem = (itemId: string) => {
+    setModifiedItems(modifiedItems.filter((item) => item.itemId !== itemId));
+  };
+
+  const handleCancel = () => {
+    setModifiedItems([...items]);
+    setIsEditing(false);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      await axios.put(`http://localhost:5000/api/opurchase-orders/${orderId}`, {
+        orderId,
+        items: modifiedItems,
+      });
+      setIsEditing(false); 
+    } catch (error) {
+      console.error('Error updating Purchase Order:', error);
+    }
+  };
+
+  const handleQuantityChange = (itemId: string, newQuantity: number) => {
+    setModifiedItems(
+      modifiedItems.map((item) =>
+        item.itemId === itemId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
 
   const getTotalPrice = (quantity: number, unitPrice: number, taxRate: number, discountRate: number) => {
     const price = quantity * unitPrice;
@@ -58,59 +111,30 @@ const PurchaseOrderReview: React.FC<PurchaseOrderProps> = ({
     const discount = price * discountRate;
     return price + tax - discount;
   };
-
   const handleDeleteClick = () => {
     setOpen(true);
-  };
+};
 
-  const handleClose = () => {
+const handleClose = () => {
     setOpen(false);
-  };
+};
 
-  const handleConfirmDelete = async () => {
-    try {
-      await axios.delete(`http://localhost:5000/api/purchase-orders/${orderId}`);
-      onDelete();  // Call the parent's onDelete to update the state
-      setOpen(false);
-    } catch (error) {
-      console.error('Error deleting Purchase Order:', error);
-    }
-  };
+const handleConfirmDelete = async () => {
+  try {
+    await axios.delete(`http://localhost:5000/api/purchase-orders/${orderId}`);
+    onDelete();  
+    setOpen(false);
+  } catch (error) {
+    console.error('Error deleting Purchase Order:', error);
+  }
+};
 
-  const handleQuantityChange = (index: number, quantity: number) => {
-    const updatedItems = [...editedItems];
-    updatedItems[index].quantity = quantity;
-    setEditedItems(updatedItems);
-  };
+useEffect(() => {
+  setModifiedItems([...items]);
+}
+, [items]);
 
-  const handleAddNewItem = () => {
-    const newItem: Item = {
-      itemId: newItemId,
-      description: 'New Item',  // Placeholder, can be updated later
-      quantity: newItemQuantity,
-      unitPrice: 0, // Default, can be updated later
-      taxRate: 0,
-      discountRate: 0,
-      totalPrice: 0,
-    };
-    setEditedItems([...editedItems, newItem]);
-    setNewItemId('');
-    setNewItemQuantity(1);
-  };
 
-  const handleRemoveItem = (index: number) => {
-    const updatedItems = editedItems.filter((_, i) => i !== index);
-    setEditedItems(updatedItems);
-  };
-
-  const handleCancel = () => {
-    setEditedItems([...originalItems]); // Reset to the original items
-  };
-
-  const handleSubmit = () => {
-    // Update total value and proceed with submission
-    onSubmit();
-  };
 
   return (
     <Box sx={{ padding: 3, backgroundColor: '#f0f4f7', maxWidth: 870, borderRadius: 4, boxShadow: 3 }}>
@@ -125,46 +149,60 @@ const PurchaseOrderReview: React.FC<PurchaseOrderProps> = ({
       <TableContainer component={Paper} sx={{ marginTop: 2, boxShadow: 'none' }}>
         <Table>
           <TableBody>
-            {editedItems.map((item, index) => (
+            {modifiedItems.map((item, index) => (
               index % 2 === 0 ? (
                 <OddTableRow key={item.itemId}>
-                  <TableCell>{item.itemId}</TableCell>
-                  <TableCell>{item.description}</TableCell>
-                  <TableCell>
-                    <TextField
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
-                      sx={{ width: '60px' }}
-                    />
+                  <TableCell sx={{ fontSize: '0.9rem' }}>{item.itemId}</TableCell>
+                  <TableCell sx={{ fontSize: '0.9rem' }}>{item.description}</TableCell>
+                  <TableCell sx={{ fontSize: '0.9rem' }}>
+                    {isEditing ? (
+                      <TextField
+                        type="number"
+                        value={item.quantity}
+                        onChange={(e) => handleQuantityChange(item.itemId, parseInt(e.target.value, 10))}
+                      />
+                    ) : (
+                      item.quantity
+                    )}
                   </TableCell>
-                  <TableCell>Rs.{item.unitPrice}</TableCell>
-                  <TableCell>{(item.taxRate * 100).toFixed(2)}%</TableCell>
-                  <TableCell>{(item.discountRate * 100).toFixed(2)}%</TableCell>
-                  <TableCell>Rs.{getTotalPrice(item.quantity, item.unitPrice, item.taxRate, item.discountRate)}</TableCell>
-                  <TableCell>
-                    <Button variant="contained" color="error" onClick={() => handleRemoveItem(index)}>Remove</Button>
-                  </TableCell>
+                  <TableCell sx={{ fontSize: '0.9rem' }}>Rs.{item.unitPrice}</TableCell>
+                  <TableCell sx={{ fontSize: '0.9rem' }}>{(item.taxRate * 100).toFixed(2)}%</TableCell>
+                  <TableCell sx={{ fontSize: '0.9rem' }}>{(item.discountRate * 100).toFixed(2)}%</TableCell>
+                  <TableCell sx={{ fontSize: '0.9rem' }}>Rs.{getTotalPrice(item.quantity, item.unitPrice, item.taxRate, item.discountRate)}</TableCell>
+                  {isEditing && (
+                    <TableCell>
+                      <Button variant="contained" color="error" onClick={() => handleRemoveItem(item.itemId)}>
+                        Remove
+                      </Button>
+                    </TableCell>
+                  )}
                 </OddTableRow>
               ) : (
                 <EvenTableRow key={item.itemId}>
-                  <TableCell>{item.itemId}</TableCell>
-                  <TableCell>{item.description}</TableCell>
-                  <TableCell>
+                <TableCell sx={{ fontSize: '0.9rem' }}>{item.itemId}</TableCell>
+                <TableCell sx={{ fontSize: '0.9rem' }}>{item.description}</TableCell>
+                <TableCell sx={{ fontSize: '0.9rem' }}>
+                  {isEditing ? (
                     <TextField
                       type="number"
                       value={item.quantity}
-                      onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
-                      sx={{ width: '60px' }}
+                      onChange={(e) => handleQuantityChange(item.itemId, parseInt(e.target.value, 10))}
                     />
-                  </TableCell>
-                  <TableCell>Rs.{item.unitPrice}</TableCell>
-                  <TableCell>{(item.taxRate * 100).toFixed(2)}%</TableCell>
-                  <TableCell>{(item.discountRate * 100).toFixed(2)}%</TableCell>
-                  <TableCell>Rs.{getTotalPrice(item.quantity, item.unitPrice, item.taxRate, item.discountRate)}</TableCell>
+                  ) : (
+                    item.quantity
+                  )}
+                </TableCell>
+                <TableCell sx={{ fontSize: '0.9rem' }}>Rs.{item.unitPrice}</TableCell>
+                <TableCell sx={{ fontSize: '0.9rem' }}>{(item.taxRate * 100).toFixed(2)}%</TableCell>
+                <TableCell sx={{ fontSize: '0.9rem' }}>{(item.discountRate * 100).toFixed(2)}%</TableCell>
+                <TableCell sx={{ fontSize: '0.9rem' }}>Rs.{getTotalPrice(item.quantity, item.unitPrice, item.taxRate, item.discountRate)}</TableCell>
+                {isEditing && (
                   <TableCell>
-                    <Button variant="contained" color="error" onClick={() => handleRemoveItem(index)}>Remove</Button>
+                    <Button variant="contained" color="error" onClick={() => handleRemoveItem(item.itemId)}>
+                      Remove
+                    </Button>
                   </TableCell>
+                )}
                 </EvenTableRow>
               )
             ))}
@@ -172,39 +210,40 @@ const PurchaseOrderReview: React.FC<PurchaseOrderProps> = ({
         </Table>
       </TableContainer>
 
-      <Box sx={{ marginTop: 2 }}>
-        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-          Total PO Value: Rs.{editedItems.reduce((acc, item) => acc + getTotalPrice(item.quantity, item.unitPrice, item.taxRate, item.discountRate), 0).toFixed(2)}
-        </Typography>
-      </Box>
+      {isEditing && (
+        <>
+          <Box sx={{ display: 'flex', marginTop: 2 }}>
+            <TextField
+              label="Item Name"
+              value={newItem.description}
+              onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+              sx={{ marginRight: 2 }}
+            />
+            <TextField
+              label="Quantity"
+              type="number"
+              value={newItem.quantity}
+              onChange={(e) => setNewItem({ ...newItem, quantity: parseInt(e.target.value, 10) })}
+            />
+            <Button variant="contained" onClick={handleAddItem} sx={{ marginLeft: 2 }}>Add Item</Button>
+          </Box>
 
-      <Box sx={{ marginTop: 2 }}>
-        <TextField
-          label="Item ID"
-          value={newItemId}
-          onChange={(e) => setNewItemId(e.target.value)}
-          sx={{ marginRight: 2 }}
-        />
-        <TextField
-          label="Quantity"
-          type="number"
-          value={newItemQuantity}
-          onChange={(e) => setNewItemQuantity(parseInt(e.target.value))}
-          sx={{ marginRight: 2 }}
-        />
-        <Button variant="contained" onClick={handleAddNewItem}>Add Item</Button>
-      </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+            <Button variant="contained" color="secondary" onClick={handleCancel} sx={{ marginRight: 2 }}>Cancel</Button>
+            <Button variant="contained" color="primary" onClick={handleUpdate}>Update</Button>
+          </Box>
+        </>
+      )}
 
-      {status === 'draft' && (
+      {status === 'draft' && !isEditing && (
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
-          <Button variant="contained" color="primary" onClick={onModify}>Modify</Button>
-          <Button variant="contained" color="success" onClick={handleSubmit}>Submit</Button>
+          <Button variant="contained" color="primary" onClick={handleModifyClick}>Modify</Button>
+          <Button variant="contained" color="success" onClick={onSubmit}>Submit</Button>
           <Button variant="contained" color="error" onClick={handleDeleteClick}>Delete</Button>
-          <Button variant="contained" onClick={handleCancel}>Cancel</Button>
         </Box>
       )}
 
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -212,7 +251,7 @@ const PurchaseOrderReview: React.FC<PurchaseOrderProps> = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={() => setOpen(false)} color="primary">
             Cancel
           </Button>
           <Button onClick={handleConfirmDelete} color="error">
