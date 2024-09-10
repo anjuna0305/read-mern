@@ -114,6 +114,30 @@ export const searchStockItemsByName = async (req: Request, res: Response) => {
     }
 };
 
+// RESTOCK STOCK ITEM
+export const restockStockItem = async (req: Request, res: Response) => {
+    try {
+        const { restockAmount } = req.body;
+
+        if (!restockAmount || typeof restockAmount !== 'number' || restockAmount <= 0) {
+            return res.status(400).json({ message: 'Please provide a valid restock amount.' });
+        }
+
+        const item = await StockItem.findById(req.params.id);
+
+        if (!item) {
+            return res.status(404).json({ message: 'Stock item not found' });
+        }
+
+        item.quantity += restockAmount;
+        await item.save();
+
+        res.status(200).json({ message: 'Stock item restocked successfully', item });
+    } catch (err: unknown) {
+        res.status(500).json({ message: 'Failed to restock stock item', error: (err as Error).message });
+    }
+}
+
 
 // uitility functions
 export const searchStockItems = async (name: string) => {
