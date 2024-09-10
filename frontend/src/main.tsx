@@ -85,7 +85,7 @@ const router = createBrowserRouter([
                 element: <AllStockItems />
             },
             {
-                path: "item",
+                path: "item/:id",
                 element: <ItemInfo />
             }
         ]

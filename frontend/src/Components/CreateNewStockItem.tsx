@@ -1,6 +1,9 @@
-import { Box, Button, TextField, Typography } from "@mui/material"
+import { Alert, Box, Button, TextField, Typography } from "@mui/material"
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { createNewStockItem } from "../api/stockApi";
+import { CreateItemPayload, AlertInterface } from "../interfaces";
+import { useState } from "react";
 
 const validationSchema = Yup.object({
     itemName: Yup.string()
@@ -18,6 +21,8 @@ const validationSchema = Yup.object({
 });
 
 const CreateNewStockItem = () => {
+    const [alert, setAlert] = useState<AlertInterface | undefined>(undefined)
+
     const formik = useFormik({
         initialValues: {
             itemName: '',
@@ -26,9 +31,25 @@ const CreateNewStockItem = () => {
             description: '',
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             console.log(values);
-            // You can handle the submission here, like sending data to your backend
+            const payload: CreateItemPayload = {
+                itemName: values.itemName,
+                quantity: Number(values.quantity),
+                price: Number(values.price),
+                description: values.description
+            }
+            try {
+                const resultObject = await createNewStockItem(payload)
+                if (resultObject) { //item created
+                    console.log("result: ", resultObject)
+                    setAlert({ type: "success", alert: "Item added." } as AlertInterface)
+                } else {
+                    setAlert({ type: "error", alert: "Something went wrong." } as AlertInterface)
+                }
+            } catch (error) {
+                setAlert({ type: "error", alert: "Something went wrong." } as AlertInterface)
+            }
         },
     });
 
@@ -40,6 +61,8 @@ const CreateNewStockItem = () => {
             sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', maxWidth: 400 }}
         >
             <Typography variant="h6">Add New Stock Item</Typography>
+            {alert ? <Alert severity={alert.type === 'success' ? 'success' : 'error'}>{alert.alert}</Alert> : <></>
+            }
 
             <TextField
                 label="Item Name"
@@ -93,7 +116,7 @@ const CreateNewStockItem = () => {
             <Button variant="contained" color="primary" type="submit">
                 Add Item
             </Button>
-        </Box>
+        </Box >
     )
 }
 

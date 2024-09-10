@@ -1,10 +1,13 @@
 import { List, ListItemText, TextField, Typography } from "@mui/material"
 import React, { useState } from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
+import { searchStockItem } from "../api/stockApi";
+import { StockItem } from "../interfaces";
+import { NavLink } from "react-router-dom";
 
 const StockSearch = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [searchResults, setSearchResults] = useState<string[]>([]);
+    const [searchResults, setSearchResults] = useState<StockItem[]>([]);
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -12,14 +15,9 @@ const StockSearch = () => {
         }
     };
 
-    const handleSearch = () => {
-        const results = mockSearch(searchTerm);  // Replace with actual search function/API call
+    const handleSearch = async () => {
+        const results = await searchStockItem(searchTerm)
         setSearchResults(results);
-    };
-
-    const mockSearch = (term: string): string[] => {
-        const data = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
-        return data.filter((item) => item.toLowerCase().includes(term.toLowerCase()));
     };
 
     return (
@@ -41,8 +39,10 @@ const StockSearch = () => {
                         {searchResults.map((result, index) => (
                             <ListItemButton
                                 key={index}
+                                component={NavLink}
+                                to={`/stock/item/${result._id}`}
                             >
-                                <ListItemText primary={result} />
+                                <ListItemText primary={result.itemName} />
                             </ListItemButton>
                         ))}
                     </List>
